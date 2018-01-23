@@ -26,6 +26,7 @@ public class BloomFilter<E> implements Serializable {
 
     static final String hashName = "MD5"; // 通过MD5进行加密后使用hash算法，满足大多数的情况下
     static final MessageDigest digestFunction;
+
     static { // The digest method is reused between instances
         MessageDigest tmp;
         try {
@@ -38,6 +39,7 @@ public class BloomFilter<E> implements Serializable {
 
     /**
      * 构造一个空的布隆过滤器，它的总长度是c *n
+     *
      * @param c 每个元素使用的byte数
      * @param n 预计过滤器将包含的元素个数
      * @param k 使用hash函数的数量
@@ -46,7 +48,7 @@ public class BloomFilter<E> implements Serializable {
         this.expectedNumberOfFilterElements = n;
         this.k = k;
         this.bitsPerElement = c;
-        this.bitSetSize = (int)Math.ceil(c * n);
+        this.bitSetSize = (int) Math.ceil(c * n);
         numberOfAddedElements = 0;
         this.bitset = new BitSet(bitSetSize);
     }
@@ -54,13 +56,13 @@ public class BloomFilter<E> implements Serializable {
     /**
      * 构造一个空的布隆过滤器，哈希函数的最优次数根据布隆过滤器总的大小和预期最大的元素。
      *
-     * @param bitSetSize 定义总过有多少个byte位被布隆过滤器使用
+     * @param bitSetSize              定义总过有多少个byte位被布隆过滤器使用
      * @param expectedNumberOElements 定义布隆过滤器将要存放的最大元素个数
      */
     public BloomFilter(int bitSetSize, int expectedNumberOElements) {
-        this(bitSetSize / (double)expectedNumberOElements,
+        this(bitSetSize / (double) expectedNumberOElements,
                 expectedNumberOElements,
-                (int) Math.round((bitSetSize / (double)expectedNumberOElements) * Math.log(2.0)));
+                (int) Math.round((bitSetSize / (double) expectedNumberOElements) * Math.log(2.0)));
     }
 
     /**
@@ -73,15 +75,16 @@ public class BloomFilter<E> implements Serializable {
     public BloomFilter(double falsePositiveProbability, int expectedNumberOfElements) {
         this(Math.ceil(-(Math.log(falsePositiveProbability) / Math.log(2))) / Math.log(2), // c = k / ln(2)
                 expectedNumberOfElements,
-                (int)Math.ceil(-(Math.log(falsePositiveProbability) / Math.log(2)))); // k = ceil(-log_2(false prob.))
+                (int) Math.ceil(-(Math.log(falsePositiveProbability) / Math.log(2)))); // k = ceil(-log_2(false prob.))
     }
 
     /**
      * 构造一个布隆过滤器，在已经存在的数据集上。
-     * @param bitSetSize 定义总过有多少个byte位被布隆过滤器使用
+     *
+     * @param bitSetSize                     定义总过有多少个byte位被布隆过滤器使用
      * @param expectedNumberOfFilterElements 定义布隆过滤器将要存放的最大元素个数
-     * @param actualNumberOfFilterElements 定义还将有多少个元素插入到已经已经存在的bloomFilter数据集上
-     * @param filterData 定义已经存在的数据集
+     * @param actualNumberOfFilterElements   定义还将有多少个元素插入到已经已经存在的bloomFilter数据集上
+     * @param filterData                     定义已经存在的数据集
      */
     public BloomFilter(int bitSetSize, int expectedNumberOfFilterElements, int actualNumberOfFilterElements, BitSet filterData) {
         this(bitSetSize, expectedNumberOfFilterElements);
@@ -92,7 +95,7 @@ public class BloomFilter<E> implements Serializable {
     /**
      * Generates a digest based on the contents of a String.
      *
-     * @param val 指定输入的数据
+     * @param val     指定输入的数据
      * @param charset 指定编码格式
      * @return digest as long.
      */
@@ -122,11 +125,11 @@ public class BloomFilter<E> implements Serializable {
 
     /**
      * 将一个字节数据分成四个字节，每个字节生成一个整数存放在数组中
-     *
+     * <p>
      * digest function is called until the required number of int's are produced.
      * For each call to digest a salt is prepended to the data. The salt is increased by 1 for each call.
      *
-     * @param data 指定输入数据
+     * @param data   指定输入数据
      * @param hashes 需要hash的次数
      * @return array 通过hash之后产生的int数量
      */
@@ -143,9 +146,9 @@ public class BloomFilter<E> implements Serializable {
                 digest = digestFunction.digest(data);
             }
 
-            for (int i = 0; i < digest.length/4 && k < hashes; i++) {
+            for (int i = 0; i < digest.length / 4 && k < hashes; i++) {
                 int h = 0;
-                for (int j = (i*4); j < (i*4)+4; j++) {
+                for (int j = (i * 4); j < (i * 4) + 4; j++) {
                     h <<= 8;
                     h |= ((int) digest[j]) & 0xFF;
                 }
@@ -190,6 +193,7 @@ public class BloomFilter<E> implements Serializable {
 
     /**
      * Calculates a hash code for this class.
+     *
      * @return hash code representing the contents of an instance of this class.
      */
     @Override
@@ -282,11 +286,12 @@ public class BloomFilter<E> implements Serializable {
         int[] hashes = createHashes(bytes, k);
         for (int hash : hashes)
             bitset.set(Math.abs(hash % bitSetSize), true);
-        numberOfAddedElements ++;
+        numberOfAddedElements++;
     }
 
     /**
      * Adds all elements from a Collection to the Bloom filter.
+     *
      * @param c Collection of elements.
      */
     public void addAll(Collection<? extends E> c) {
@@ -328,6 +333,7 @@ public class BloomFilter<E> implements Serializable {
      * Returns true if all the elements of a Collection could have been inserted
      * into the Bloom filter. Use getFalsePositiveProbability() to calculate the
      * probability of this being correct.
+     *
      * @param c elements to check.
      * @return true if all the elements in c could have been inserted into the Bloom filter.
      */
@@ -340,6 +346,7 @@ public class BloomFilter<E> implements Serializable {
 
     /**
      * Read a single bit from the Bloom filter.
+     *
      * @param bit the bit to read.
      * @return true if the bit is set, false if it is not.
      */
@@ -349,7 +356,8 @@ public class BloomFilter<E> implements Serializable {
 
     /**
      * Set a single bit in the Bloom filter.
-     * @param bit is the bit to set.
+     *
+     * @param bit   is the bit to set.
      * @param value If true, the bit is set. If false, the bit is cleared.
      */
     public void setBit(int bit, boolean value) {
@@ -358,6 +366,7 @@ public class BloomFilter<E> implements Serializable {
 
     /**
      * Return the bit set used to store the Bloom filter.
+     *
      * @return bit set representing the Bloom filter.
      */
     public BitSet getBitSet() {
@@ -385,6 +394,7 @@ public class BloomFilter<E> implements Serializable {
 
     /**
      * 返回布隆过滤器中预期最大的值，这个只和传给构造器的值是一样的。
+     *
      * @return 布隆过滤器中预期最大的值
      */
     public int getExpectedNumberOfElements() {
@@ -408,6 +418,6 @@ public class BloomFilter<E> implements Serializable {
      * @return number of bits per element.
      */
     public double getBitsPerElement() {
-        return this.bitSetSize / (double)numberOfAddedElements;
+        return this.bitSetSize / (double) numberOfAddedElements;
     }
 }

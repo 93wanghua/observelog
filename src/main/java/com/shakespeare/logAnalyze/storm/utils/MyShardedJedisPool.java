@@ -35,14 +35,16 @@ public class MyShardedJedisPool {
         //创建具有分片功能的的Jedis连接池
         shardedJedisPool = new ShardedJedisPool(config, list);
     }
+
     public static ShardedJedisPool getShardedJedisPool() {
         return shardedJedisPool;
     }
+
     public static void main(String[] args) {
         ShardedJedis jedis = MyShardedJedisPool.getShardedJedisPool().getResource();
-        jedis.set("1","maoxiangyi");
-        jedis.set("2","itcast");
-        jedis.set("3","传智播客");
-        jedis.set("4","java学院");
+        jedis.set("1", "maoxiangyi");
+        jedis.set("2", "itcast");
+        jedis.set("3", "传智播客");
+        jedis.set("4", "java学院");
     }
 }
