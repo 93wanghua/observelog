@@ -28,9 +28,9 @@ public class LogMonitorTopologyMain {
         // 使用TopologyBuilder进行构建驱动类
         TopologyBuilder builder = new TopologyBuilder();
 //         设置kafka的zookeeper集群
-        BrokerHosts hosts = new ZkHosts("zk01:2181,zk02:2181,zk03:2181");
+        BrokerHosts hosts = new ZkHosts("server00:2181,server01:2181");
 //        // 初始化配置信息
-        SpoutConfig spoutConfig = new SpoutConfig(hosts, "logmonitor", "/aaa", "log_monitor");
+        SpoutConfig spoutConfig = new SpoutConfig(hosts, "logmonitor", "/logger4monitor", "log_monitor");
         // 在topology中设置spout
         builder.setSpout("kafka-spout", new KafkaSpout(spoutConfig));
 //        builder.setSpout("kafka-spout",new RandomSpout(new StringScheme()),2);
