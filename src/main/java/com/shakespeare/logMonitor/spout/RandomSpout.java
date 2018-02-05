@@ -13,12 +13,12 @@ import java.util.Random;
 
 
 /**
- *随机产生消息发送出去
+ * 随机产生消息发送出去
  */
 public class RandomSpout extends BaseRichSpout {
     private SpoutOutputCollector collector;
     private TopologyContext context;
-    private List list ;
+    private List list;
     private final Scheme scheme;
 
     public RandomSpout(final Scheme scheme) {

@@ -176,6 +176,7 @@ public class MonitorHandler {
     private static Map<String, List<Rule>> loadRuleMap() {
         Map<String, List<Rule>> map = new HashMap<String, List<Rule>>();
         LogMonitorDao logMonitorDao = new LogMonitorDao();
+        //从数据库加载规则
         List<Rule> ruleList = logMonitorDao.getRuleList();
         //将代表rule的list转化成一个map，转化的逻辑是，
         // 从rule.getAppId作为map的key，然后将rule对象作为value传入map
